@@ -3,53 +3,55 @@ import { initFirebase } from '../firebase/firebaseClient'
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth'
 import { fetchFromOrgAPI } from '../lib/fetchFromOrgAPI'
 
-initFirebase()
-
-// Hardcoded org info for demo (in real app, fetch from Firestore)
-const userOrgMap = {
-  // Firebase anonymous UID -> organization
-  'uid-abc123': 'orgA',
-  'uid-def456': 'orgB',
-}
-
 export default function ScanPage() {
   const [number, setNumber] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Hardcoded org info for demo (in real app I would fetch from Firestore)
+  const userOrgMap = {
+    'uid-abc123': 'orgA',
+    'uid-def456': 'orgB',
+  }
+
   useEffect(() => {
     const run = async () => {
-      const auth = getAuth()
-
       try {
-        // Sign in anonymously
+        initFirebase()
+
+        const auth = getAuth()
+
+
         const result = await signInAnonymously(auth)
 
-        // Get user
+
         const user = result.user
         const uid = user.uid
-
         console.log('Signed in as:', uid)
 
-        // Get org from hardcoded map (simulate database)
+        // Get organization from hardcoded map, I would change this is live deployment
         const org = userOrgMap[uid] || 'orgA' // fallback for unknown users
 
-        // Fetch number from org-based API
         const num = await fetchFromOrgAPI(org)
+
         setNumber(num)
       } catch (err) {
         console.error('Error:', err)
-        setError('Something went wrong.')
+        setError('Something went wrong during authentication or API fetch.')
       } finally {
         setLoading(false)
       }
     }
 
     run()
-  }, [])
+  }, []) 
 
+ 
   if (loading) return <p>Loading...</p>
+
+
   if (error) return <p>{error}</p>
+
 
   return (
     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
