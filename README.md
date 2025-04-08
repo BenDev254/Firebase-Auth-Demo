@@ -1,147 +1,122 @@
-# Firebase Authentication Demo with Next.js
+# Firebase Auth Demo - Next.js
 
-This is a demo app built with **Next.js** and **Firebase Authentication** to simulate user login and fetch random numbers from different APIs based on the user's organization.
-
-The app distinguishes users based on Firebase Authentication, fetches their organization info, and then calls one of two mock APIs to get a random number.
+This is a simple Next.js application demonstrating Firebase authentication (anonymous sign-in) and fetching data from different APIs based on user organizations. This project is built to showcase how you can authenticate users using Firebase and dynamically fetch data based on their organization.
 
 ## Features
 
-- **Firebase Authentication**: Users are authenticated anonymously using Firebase.
-- **QR Code Simulation**: The app simulates scanning a QR code (redirecting to `/scan`).
-- **User Organization Logic**: Based on the authenticated user’s unique ID, the app determines which organization the user belongs to and fetches a random number from the corresponding API.
-- **Mock APIs**: Two mock APIs return a random number (simulated for this demo).
+- Firebase Authentication using anonymous sign-in
+- Organization-based data fetching from mock APIs
+- Simulate multiple organizations (`orgA`, `orgB`) for testing
+- Uses Firebase to initialize the app and fetch data for authenticated users
 
-## Prerequisites
+## Technologies Used
 
-- Node.js (>= 14.x)
-- Firebase account
-- A Firebase project set up for authentication (we're using anonymous sign-in)
+- **Next.js** - React framework for building the application
+- **Firebase** - Authentication and backend services
+- **Vercel** - Deployment platform (for production)
+- **Mock APIs** - Simulate different organization-based data fetching
 
-## Installation
+## Setup and Installation
 
-### 1. Clone the repository
+To set up this project locally, follow the steps below:
 
-```bash
-git clone https://github.com/YOUR_USERNAME/Firebase-Auth-Demo.git
-cd Firebase-Auth-Demo
-```
+1. Clone the repository:
 
-### 2. Install dependencies
+   ```bash
+   git clone https://github.com/BenDev254/Firebase-Auth-Demo.git
+   cd Firebase-Auth-Demo
+   ```
 
-Run the following command to install the necessary dependencies:
+2. Install dependencies:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
-### 3. Set up Firebase
+3. Create a `.env.local` file at the root of the project with your Firebase configuration. Replace the placeholders with your Firebase project's credentials.
 
-#### Create Firebase Project
-- Go to the [Firebase Console](https://console.firebase.google.com/).
-- Create a new Firebase project.
-- Enable **Firebase Authentication** for your project and enable **Anonymous Authentication**.
-  
-#### Add Firebase configuration to `.env.local`
-Create a `.env.local` file in the root of your project and add the following Firebase environment variables:
+   ```ini
+   NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+   ```
 
-```ini
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDOqbegBbLOFXqzC63sWzWgqvjwguwR-1k
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=code-engine-demo.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=code-engine-demo
-NEXT_PUBLIC_FIREBASE_APP_ID=1:1234567890:web:abcdefgh12345678
-```
+4. Run the development server:
 
-You can find these credentials in your Firebase console under **Project settings** > **General** > **Your apps** > **Firebase SDK snippet** (for web).
+   ```bash
+   npm run dev
+   ```
 
-### 4. Run the app locally
+5. Open the application in your browser at `http://localhost:3000`.
 
-Start the development server:
-
-```bash
-npm run dev
-```
-
-This will start the app at `http://localhost:3000`. Open this URL in your browser to interact with the app.
-
-## How It Works
-
-1. **QR Code Simulation**:
-   - When users visit `http://localhost:3000/scan`, they are redirected after scanning the QR code (for testing, just open the URL directly in a browser).
-  
-2. **Firebase Authentication**:
-   - The app authenticates the user anonymously using Firebase Authentication.
-   - After authentication, the app checks the user's unique ID (UID) and assigns the user to a particular organization using a hardcoded map.
-
-3. **Fetching Random Numbers**:
-   - Based on the user’s organization (stored in the `userOrgMap`), the app fetches a random number from one of the two mock APIs.
-   - The number is displayed to the user.
-
-### Mock Organization Mapping
-
-In the app, users are assigned to organizations based on their Firebase UID. For example:
-
-```js
-const userOrgMap = {
-  'uid-abc123': 'orgA',
-  'uid-def456': 'orgB',
-}
-```
-
-When a user is authenticated, the app looks up their organization and fetches a random number from either **API A** or **API B**.
-
-## Folder Structure
+## Project Structure
 
 ```
 /pages
-  /scan.js          - Page where users are authenticated and assigned to an organization.
+  /api              # Mock API endpoints
+  /scan.js          # Main page for random number fetch based on user organization
+
 /firebase
-  /firebaseClient.js - Firebase initialization code for authentication.
+  firebaseClient.js # Firebase initialization and authentication logic
+
 /lib
-  /fetchFromOrgAPI.js - Logic for fetching a random number from the mock APIs.
-.env.local          - Environment variables for Firebase configuration.
-.gitignore          - Ignore node_modules and environment files.
-package.json        - Project dependencies and scripts.
-README.md           - Project documentation.
+  fetchFromOrgAPI.js # Function to fetch data from organization-based APIs
+
+/public
+  /favicon.ico      # Default favicon for the app
+
+/styles
+  global.css        # Global styles for the application
 ```
 
-## Testing the App
+## How It Works
 
-1. Visit `http://localhost:3000/scan`.
-2. The app will sign the user in anonymously using Firebase.
-3. Once authenticated, the app will look up the user’s organization and display a random number based on that organization.
+1. The `ScanPage` component is responsible for signing in users anonymously via Firebase.
+2. Once the user is signed in, the app uses their UID to determine their organization (for demo purposes, this is hardcoded).
+3. Based on the user's organization, it fetches a random number from a mock API (`/api/mockA` or `/api/mockB`).
+4. The fetched number is displayed on the page.
+5. You can toggle between organizations (`orgA` or `orgB`) using the button on the page for testing.
 
-## Deployment
+## Testing Multiple Organizations
 
-### Deploy to Vercel
+- By default, the app checks the user's UID to determine which organization to fetch data for.
+- For testing purposes, you can toggle between `orgA` and `orgB` using a button on the page.
 
-You can deploy this app to [Vercel](https://vercel.com) for free.
+## Firebase Authentication
 
-#### Steps to deploy:
+Firebase Authentication is used to sign users in anonymously. You can extend this for more authentication providers like Google or email/password in the future.
 
-1. Go to [Vercel](https://vercel.com).
-2. Sign in with your GitHub account.
-3. Click "Add New Project" and select your repository from GitHub.
-4. Configure environment variables:
-   - `NEXT_PUBLIC_FIREBASE_API_KEY`
-   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
-   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-   - `NEXT_PUBLIC_FIREBASE_APP_ID`
-5. Vercel will automatically deploy the app and provide you with a live link.
+## Deploying to Vercel
 
-## Troubleshooting
+This project is ready to be deployed on Vercel for production. Simply follow these steps:
 
-- **Authentication Issues**: If you're having issues with Firebase Authentication, make sure you have enabled **Anonymous Authentication** in your Firebase console under **Authentication** > **Sign-in method**.
-  
-- **Missing Firebase credentials**: If you haven't set up your Firebase credentials in `.env.local` correctly, you'll get errors related to missing or invalid Firebase configuration.
+1. Push your changes to a GitHub repository.
+2. Log in to [Vercel](https://vercel.com/).
+3. Create a new project and link it to your GitHub repository.
+4. Vercel will automatically deploy the application.
 
-- **CORS issues with mock APIs**: If you're using your own mock APIs locally, make sure CORS headers are properly configured.
+For more information on deploying Next.js apps on Vercel, visit the [Vercel documentation](https://vercel.com/docs).
+
+## Environment Variables
+
+This project requires the following Firebase environment variables to work correctly:
+
+```ini
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+```
+
+Make sure to replace these placeholders with your actual Firebase credentials.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Firebase](https://firebase.google.com/) for the Authentication service.
-- [Next.js](https://nextjs.org/) for the React framework.
-- [Vercel](https://vercel.com/) for easy deployment.
