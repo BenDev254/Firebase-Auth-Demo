@@ -1,4 +1,3 @@
-
 # Firebase Authentication Demo with Next.js
 
 This is a demo app built with **Next.js** and **Firebase Authentication** to simulate user login and fetch random numbers from different APIs based on the user's organization.
